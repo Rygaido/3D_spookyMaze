@@ -59,20 +59,17 @@ public class CharacterScript : MonoBehaviour {
 		//If player is pressing jump...
 		if (Input.GetButtonDown("Jump")){
 
-			if (isGrounded){ // no: if grounded, jump up
-				GetComponent<Rigidbody>().velocity += jumpSpeed * myNormal;
-
-				//If there is a wall ahead, stick to it
-				ray = new Ray(myTransform.position, myTransform.forward);
-				if (Physics.Raycast(ray, out hit, jumpRange)){
-					if (hit.transform.tag =="Wall") JumpToWall(hit.point, hit.normal); // yes: jump to the wall
-				}
+			//If there is a wall ahead, stick to it
+			ray = new Ray(myTransform.position, myTransform.forward);
+			if (Physics.Raycast(ray, out hit, jumpRange)){
+				if (hit.transform.tag =="Wall") JumpToWall(hit.point, hit.normal); // yes: jump to the wall
 			}
+			
 		}
 
 
-		// movement code - turn left/right with Horizontal axis:
-		myTransform.Rotate(0, Input.GetAxis("Horizontal")*turnSpeed*Time.deltaTime, 0);
+		// movement code
+		myTransform.Rotate (0, Input.GetAxis ("Mouse X") * turnSpeed * Time.deltaTime, 0);
 
 
 		ray = new Ray(myTransform.position, -myNormal); // cast ray downwards
@@ -98,6 +95,7 @@ public class CharacterScript : MonoBehaviour {
 		myTransform.rotation = Quaternion.Lerp(myTransform.rotation, targetRot, lerpSpeed*Time.deltaTime);
 		// move the character forth/back with Vertical axis:
 		myTransform.Translate(0, 0, Input.GetAxis("Vertical")*moveSpeed*Time.deltaTime);
+		myTransform.Translate(Input.GetAxis("Horizontal")*moveSpeed*Time.deltaTime, 0, 0);
 	}
 	
 	private void JumpToWall(Vector3 point, Vector3 normal){
@@ -127,5 +125,6 @@ public class CharacterScript : MonoBehaviour {
 		jumping = false; // jumping to wall finished
 		
 	}
+
 	
 }
