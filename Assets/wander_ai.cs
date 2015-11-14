@@ -22,8 +22,6 @@ public class wander_ai : MonoBehaviour {
 	public GameObject target;
 	public float targetPriority = 1.0f;
 
-	public AnimationCurve weight;
-
 	// Use this for initialization
 	void Start () {
 		
@@ -34,35 +32,16 @@ public class wander_ai : MonoBehaviour {
 		if (t <= -delay) {
 			float weightAngle = 0.0f;
 			if (targetPriority > 0 && target != null){
-				//Vector3 a = (transform.position - target.transform.position);
-				Vector3 a = (target.transform.position - transform.position);
-
+				Vector3 a = (transform.position - target.transform.position);
+				
 				weightAngle = Vector3.Angle( Vector3.forward, a); //determine angle between up vector and mouse
-				//float sign = Mathf.Sign(Vector3.Dot(Vector3.forward, Vector3.Cross(Vector3.up, a))); //get sign for rotation
-				float sign = Mathf.Sign(Vector3.Dot(Vector3.up, Vector3.Cross(Vector3.forward, a))); //get sign for rotation
+				float sign = Mathf.Sign(Vector3.Dot(Vector3.forward, Vector3.Cross(Vector3.up, a))); //get sign for rotation
 				weightAngle *=sign; 
-				Debug.Log(weightAngle+"\n");
-
-				//Need to find angle to face object, currently just turning by that angle from whatever direction is facing
 			}
 
 
-			//direction = Random.Range (-180f, 180f);
-			direction = weight.Evaluate(Random.value)*180f; //(-180f, 180f);
-			if(Random.value >= 0.5f){
-				direction*=-1f;
-			}
-			direction+=weightAngle;
-			if(direction > 180){
-				direction-=180;
-				direction*=-1;
-			}
-			else if(direction < -180){
-				direction += 180;
-				direction*=-1;
-			}
-			//direction += Random.Range(0, weightAngle-direction);
-			//direction += weight.Evaluate(Random.value) * weightAngle;
+			direction = Random.Range (-180f, 180f);
+			direction += Random.Range(0, weightAngle-direction);
 
 			speed = Random.Range (-speedMax, speedMax);
 			delay = Random.Range(0,delayMax);
