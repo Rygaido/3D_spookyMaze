@@ -10,6 +10,7 @@ public class CharacterScript : MonoBehaviour {
 	private float gravity = 10; 		// gravity acceleration
 	
 	private bool isGrounded;
+	private bool isAlive;
 
 	private float deltaGround = 0.2f; 	// character is grounded up to this distance
 	private float jumpSpeed = 10; 		// vertical jump initial speed
@@ -36,7 +37,7 @@ public class CharacterScript : MonoBehaviour {
 		// distance from transform.position to ground
 		distGround = boxCollider.extents.y - boxCollider.center.y;
 
-		
+		isAlive = true;
 	}
 	
 	private void FixedUpdate(){
@@ -51,51 +52,61 @@ public class CharacterScript : MonoBehaviour {
 	private void Update(){
 		// jump code - jump to wall or simple jump
 		if (jumping) return; // abort Update while jumping to a wall
+
+		if (isAlive) {
 		
-		Ray ray;
-		RaycastHit hit;
+			Ray ray;
+			RaycastHit hit;
 
 
-		//If player is pressing jump...
-		if (Input.GetButtonDown("Jump")){
+			//If player is pressing jump...
+			if (Input.GetButtonDown ("Jump")) {
 
-			//If there is a wall ahead, stick to it
-			ray = new Ray(myTransform.position, myTransform.forward);
-			if (Physics.Raycast(ray, out hit, jumpRange)){
-				if (hit.transform.tag =="Wall") JumpToWall(hit.point, hit.normal); // yes: jump to the wall
-			}
+				//If there is a wall ahead, stick to it
+				ray = new Ray (myTransform.position, myTransform.forward);
+				if (Physics.Raycast (ray, out hit, jumpRange)) {
+					if (hit.transform.tag == "Wall")
+						JumpToWall (hit.point, hit.normal); // yes: jump to the wall
+				}
 			
+			}
+
+
+			// movement code
+			myTransform.Rotate (0, Input.GetAxis ("Mouse X") * turnSpeed * Time.deltaTime, 0);
+
+
+			ray = new Ray (myTransform.position, -myNormal); // cast ray downwards
+
+			//If there is ground close enough below player, attach player to that ground
+			if (Physics.Raycast (ray, out hit)) { 
+
+				isGrounded = hit.distance <= distGround + deltaGround;
+				surfaceNormal = hit.normal;
+			} else {
+				isGrounded = false;
+				// assume usual ground normal to avoid "falling forever"
+				surfaceNormal = Vector3.up;
+			}
+
+
+			myNormal = Vector3.Lerp (myNormal, surfaceNormal, lerpSpeed * Time.deltaTime);
+			// find forward direction with new myNormal:
+			myForward = Vector3.Cross (myTransform.right, myNormal);
+			// align character to the new myNormal while keeping the forward direction:
+			Quaternion targetRot = Quaternion.LookRotation (myForward, myNormal);
+			myTransform.rotation = Quaternion.Lerp (myTransform.rotation, targetRot, lerpSpeed * Time.deltaTime);
+			// move the character forth/back with Vertical axis:
+			myTransform.Translate (0, 0, Input.GetAxis ("Vertical") * moveSpeed * Time.deltaTime);
+			myTransform.Translate (Input.GetAxis ("Horizontal") * moveSpeed * Time.deltaTime, 0, 0);
 		}
-
-
-		// movement code
-		myTransform.Rotate (0, Input.GetAxis ("Mouse X") * turnSpeed * Time.deltaTime, 0);
-
-
-		ray = new Ray(myTransform.position, -myNormal); // cast ray downwards
-
-		//If there is ground close enough below player, attach player to that ground
-		if (Physics.Raycast(ray, out hit )){ 
-
-			isGrounded = hit.distance <= distGround + deltaGround;
-			surfaceNormal = hit.normal;
-		}
+		//If player is dead, fall over and die
 		else {
-			isGrounded = false;
-			// assume usual ground normal to avoid "falling forever"
-			surfaceNormal = Vector3.up;
+
+
+
+
 		}
-
-
-		myNormal = Vector3.Lerp(myNormal, surfaceNormal, lerpSpeed*Time.deltaTime);
-		// find forward direction with new myNormal:
-		myForward = Vector3.Cross(myTransform.right, myNormal);
-		// align character to the new myNormal while keeping the forward direction:
-		Quaternion targetRot = Quaternion.LookRotation(myForward, myNormal);
-		myTransform.rotation = Quaternion.Lerp(myTransform.rotation, targetRot, lerpSpeed*Time.deltaTime);
-		// move the character forth/back with Vertical axis:
-		myTransform.Translate(0, 0, Input.GetAxis("Vertical")*moveSpeed*Time.deltaTime);
-		myTransform.Translate(Input.GetAxis("Horizontal")*moveSpeed*Time.deltaTime, 0, 0);
 	}
 	
 	private void JumpToWall(Vector3 point, Vector3 normal){
@@ -126,5 +137,10 @@ public class CharacterScript : MonoBehaviour {
 		
 	}
 
+	void OnTriggerEnter(Collider other){
+		if (other.transform.tag == "Enemy") {
+			isAlive = false;
+		}
+	}
 	
 }
