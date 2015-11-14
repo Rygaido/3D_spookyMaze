@@ -19,7 +19,7 @@ public class wander_ai : MonoBehaviour {
 	Random rand;
 
 
-	public Vector3 origin;
+	Vector3 origin;
 	public GameObject player;
 	public bool isActivated;
 
@@ -30,17 +30,19 @@ public class wander_ai : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+		origin = transform.position;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (t <= -delay) {
-			if((transform.position-player.transform.position).magnitude < range){
-				isActivated = true;
-			}
-			else{
-				isActivated = false;
+			if(player != null){
+				if((transform.position-player.transform.position).magnitude < range){
+					isActivated = true;
+				}
+				else{
+					isActivated = false;
+				}
 			}
 
 			float weightAngle = 0.0f;
