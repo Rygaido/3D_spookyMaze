@@ -32,10 +32,21 @@ public class wander_ai : MonoBehaviour {
 		if (t <= -delay) {
 			float weightAngle = 0.0f;
 			if (targetPriority > 0 && target != null){
+				//Vector3 a = (transform.position - target.transform.position);
+				Vector3 targPos = target.transform.position;
+				targPos.z = transform.position.z;
+				Vector3 a = (targPos - transform.position);
+
+				weightAngle = Vector3.Angle( transform.forward, a); //determine angle faced direction and facing target
+
+				//float sign = Mathf.Sign(Vector3.Dot(Vector3.forward, Vector3.Cross(Vector3.up, a))); //get sign for rotation
+				float sign = Mathf.Sign(Vector3.Dot(Vector3.up, Vector3.Cross(Vector3.forward, a))); //get sign for rotation
+
 				Vector3 a = (transform.position - target.transform.position);
 				
 				weightAngle = Vector3.Angle( Vector3.forward, a); //determine angle between up vector and mouse
 				float sign = Mathf.Sign(Vector3.Dot(Vector3.forward, Vector3.Cross(Vector3.up, a))); //get sign for rotation
+
 				weightAngle *=sign; 
 			}
 
