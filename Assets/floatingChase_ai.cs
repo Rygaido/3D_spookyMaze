@@ -20,6 +20,6 @@ public class floatingChase_ai : MonoBehaviour {
 
 		direction.Normalize ();
 
-		transform.translate (direction * speed);
+		transform.Translate (direction * speed);
 	}
 }

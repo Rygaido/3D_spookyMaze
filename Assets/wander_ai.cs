@@ -17,9 +17,15 @@ public class wander_ai : MonoBehaviour {
 	public float delayMax=3.0f;
 	
 	Random rand;
-	
+
+
+	public Vector3 origin;
+	public GameObject player;
+	public bool isActivated;
+
+	public float range = 10.0f;
 	//if target is specified, ai is more likely to wander in its general direction
-	public GameObject target;
+	Vector3 target;
 	public float targetPriority = 1.0f;
 
 	// Use this for initialization
@@ -30,22 +36,30 @@ public class wander_ai : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (t <= -delay) {
+			if((transform.position-player.transform.position).magnitude < range){
+				isActivated = true;
+			}
+			else{
+				isActivated = false;
+			}
+
 			float weightAngle = 0.0f;
-			if (targetPriority > 0 && target != null){
+			if (targetPriority > 0){
+				if(isActivated){
+					target = player.transform.position;
+				}
+				else{
+					target = origin;
+				}
 				//Vector3 a = (transform.position - target.transform.position);
-				Vector3 targPos = target.transform.position;
-				targPos.z = transform.position.z;
-				Vector3 a = (targPos - transform.position);
+				//Vector3 targPos = target.transform.position;
+				target.z = transform.position.z;
+				Vector3 a = (target - transform.position);
 
 				weightAngle = Vector3.Angle( transform.forward, a); //determine angle faced direction and facing target
 
 				//float sign = Mathf.Sign(Vector3.Dot(Vector3.forward, Vector3.Cross(Vector3.up, a))); //get sign for rotation
 				float sign = Mathf.Sign(Vector3.Dot(Vector3.up, Vector3.Cross(Vector3.forward, a))); //get sign for rotation
-
-				Vector3 a = (transform.position - target.transform.position);
-				
-				weightAngle = Vector3.Angle( Vector3.forward, a); //determine angle between up vector and mouse
-				float sign = Mathf.Sign(Vector3.Dot(Vector3.forward, Vector3.Cross(Vector3.up, a))); //get sign for rotation
 
 				weightAngle *=sign; 
 			}
