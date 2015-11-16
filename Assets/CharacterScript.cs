@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class CharacterScript : MonoBehaviour {
 	
-	private float moveSpeed = 6;    	// move speed
+	public float moveSpeed = 6;    	// move speed
 	private float turnSpeed = 90; 		// turning speed (degrees/second)
 	private float lerpSpeed = 5; 		// smoothing speed
 	private float gravity = 10; 		// gravity acceleration
