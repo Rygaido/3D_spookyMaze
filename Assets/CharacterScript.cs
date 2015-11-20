@@ -84,19 +84,21 @@ public class CharacterScript : MonoBehaviour {
 				isGrounded = hit.distance <= distGround + deltaGround;
 				surfaceNormal = hit.normal;
 
-				if(!isGrounded && !jumping){
-					ray = new Ray (myTransform.position, -myTransform.forward); // cast ray downwards
-					
-					//If there is ground close enough below player, attach player to that ground
-					if (Physics.Raycast (ray, out hit)) { 
-						JumpToWall (myTransform.position - myTransform.up, myTransform.forward);
-					}
-				}
 			} else {
 				isGrounded = false;
 				// assume usual ground normal to avoid "falling forever"
 				surfaceNormal = Vector3.up;
 			}
+
+			if(!isGrounded && !jumping){
+				ray = new Ray (myTransform.position, -myTransform.forward); // cast ray downwards
+				
+				//If there is ground close enough below player, attach player to that ground
+				if (Physics.Raycast (ray, out hit)) { 
+					JumpToWall (myTransform.position - myTransform.up, myTransform.forward);
+				}
+			}
+
 
 
 			myNormal = Vector3.Lerp (myNormal, surfaceNormal, lerpSpeed * Time.deltaTime);
