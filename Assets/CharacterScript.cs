@@ -83,6 +83,15 @@ public class CharacterScript : MonoBehaviour {
 
 				isGrounded = hit.distance <= distGround + deltaGround;
 				surfaceNormal = hit.normal;
+
+				if(!isGrounded && !jumping){
+					ray = new Ray (myTransform.position, -myTransform.forward); // cast ray downwards
+					
+					//If there is ground close enough below player, attach player to that ground
+					if (Physics.Raycast (ray, out hit)) { 
+						JumpToWall (myTransform.position - myTransform.up, myTransform.forward);
+					}
+				}
 			} else {
 				isGrounded = false;
 				// assume usual ground normal to avoid "falling forever"
@@ -116,7 +125,7 @@ public class CharacterScript : MonoBehaviour {
 		GetComponent<Rigidbody>().isKinematic = true; // disable physics while jumping
 		Vector3 orgPos = myTransform.position;
 		Quaternion orgRot = myTransform.rotation;
-		Vector3 dstPos = point + normal * (distGround + 0.5f); // will jump to 0.5 above wall
+		Vector3 dstPos = point + normal * (distGround + 0.0f); // will jump to 0.5 above wall
 		Vector3 myForward = Vector3.Cross(myTransform.right, normal);
 		Quaternion dstRot = Quaternion.LookRotation(myForward, normal);
 		
