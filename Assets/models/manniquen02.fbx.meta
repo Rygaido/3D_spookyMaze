@@ -153,6 +153,7 @@ ModelImporter:
     100290: Point
     100292: RArm01
     100294: RArm01 1
+    100296: Man02
     400000: Armature
     400002: Armature.001
     400004: Bone
@@ -301,6 +302,7 @@ ModelImporter:
     400290: Point
     400292: RArm01
     400294: RArm01 1
+    400296: Man02
     2300000: Cube.002
     2300002: Cube.003
     2300004: Cube.004
@@ -340,7 +342,9 @@ ModelImporter:
     7400010: Armature|Scratching
     7400012: Armature|Scratching.002
     7400014: Armature|WalkCycle
+    7400016: Armature.001|Idle
     9500000: //RootNode
+    11100000: //RootNode
     13700000: Cube
     13700002: Cube.001
   materials:
@@ -360,15 +364,15 @@ ModelImporter:
     animationRotationError: .5
     animationPositionError: .5
     animationScaleError: .5
-    animationWrapMode: 0
+    animationWrapMode: 2
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: Scratching
-      takeName: Scratching
+      name: Armature.001|Idle
+      takeName: Armature.001|Idle
       firstFrame: 0
-      lastFrame: 10
-      wrapMode: 0
+      lastFrame: 12
+      wrapMode: 2
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
@@ -860,7 +864,7 @@ ModelImporter:
       takeName: Armature.001|WalkCycle
       firstFrame: 0
       lastFrame: 39
-      wrapMode: 0
+      wrapMode: 2
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
@@ -1056,7 +1060,7 @@ ModelImporter:
     feetSpacing: 0
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 1
   additionalBone: 0
   userData: 
   assetBundleName: 
