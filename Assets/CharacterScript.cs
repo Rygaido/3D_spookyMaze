@@ -91,11 +91,15 @@ public class CharacterScript : MonoBehaviour {
 			}
 
 			if(!isGrounded && !jumping){
-				ray = new Ray (myTransform.position, -myTransform.forward); // cast ray downwards
+				ray = new Ray (myTransform.position-myTransform.up, -myTransform.forward); // cast ray backwards
 				
 				//If there is ground close enough below player, attach player to that ground
 				if (Physics.Raycast (ray, out hit)) { 
-					JumpToWall (myTransform.position - myTransform.up, myTransform.forward);
+					if (hit.transform.tag == "Wall"){
+						isGrounded = true;
+						//JumpToWall (myTransform.position - myTransform.up, myTransform.forward);
+						JumpToWall (hit.point, hit.normal);
+					}
 				}
 			}
 
