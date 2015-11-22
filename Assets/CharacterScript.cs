@@ -25,7 +25,8 @@ public class CharacterScript : MonoBehaviour {
 	private Transform myTransform;
 	public BoxCollider boxCollider; 	// drag BoxCollider ref in editor
 
-
+	private Vector3 previousPosition;
+	private Vector3 velocity;
 
 	private void Start(){
 		myNormal = transform.up; 			
@@ -50,6 +51,8 @@ public class CharacterScript : MonoBehaviour {
 	}
 	
 	private void Update(){
+		velocity = myTransform.position - previousPosition;
+
 		// jump code - jump to wall or simple jump
 		if (jumping) return; // abort Update while jumping to a wall
 
@@ -91,7 +94,7 @@ public class CharacterScript : MonoBehaviour {
 			}
 
 			if(!isGrounded && !jumping){
-				ray = new Ray (myTransform.position-myTransform.up, -myTransform.forward); // cast ray backwards
+				ray = new Ray (myTransform.position-myTransform.up, -velocity); // cast ray backwards
 				
 				//If there is ground close enough below player, attach player to that ground
 				if (Physics.Raycast (ray, out hit)) { 
@@ -122,6 +125,8 @@ public class CharacterScript : MonoBehaviour {
 
 
 		}
+
+		previousPosition = myTransform.position;
 	}
 	
 	private void JumpToWall(Vector3 point, Vector3 normal){
