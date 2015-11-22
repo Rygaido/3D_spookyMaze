@@ -35,7 +35,7 @@ public class wander_ai : MonoBehaviour {
 	void Start () {
 		origin = transform.position;
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		if (t <= -delay) {

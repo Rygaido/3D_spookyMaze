@@ -14,7 +14,7 @@ public class CharacterScript : MonoBehaviour {
 
 	private float deltaGround = 0.2f; 	// character is grounded up to this distance
 	private float jumpSpeed = 10; 		// vertical jump initial speed
-	private float jumpRange = 11; 		// range to detect target wall
+	private float jumpRange = 2; 		// range to detect target wall
 	private Vector3 surfaceNormal; 		// current surface normal
 	private Vector3 myNormal; 			// character normal
 	private Vector3 myForward;			// character forward
