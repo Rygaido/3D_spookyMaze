@@ -15,13 +15,16 @@ public class wander_ai : MonoBehaviour {
 	public float timeMax = 2.0f;
 	float delay;
 	public float delayMax=3.0f;
-	
+
+	public float animSpeed = 2.0f;
+
 	Random rand;
 
 
 	Vector3 origin;
 	public GameObject player;
 	public bool isActivated;
+	bool idle =false;
 
 	public float range = 10.0f;
 	//if target is specified, ai is more likely to wander in its general direction
@@ -36,7 +39,7 @@ public class wander_ai : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (t <= -delay) {
-			if(player != null){
+			if(player != null){ //detect player, or defult to origin settings
 				if((transform.position-player.transform.position).magnitude < range){
 					isActivated = true;
 				}
@@ -45,6 +48,7 @@ public class wander_ai : MonoBehaviour {
 				}
 			}
 
+			//modify probability to face player
 			float weightAngle = 0.0f;
 			if (targetPriority > 0){
 				if(isActivated){
@@ -66,7 +70,7 @@ public class wander_ai : MonoBehaviour {
 				weightAngle *=sign; 
 			}
 
-
+			//apply random direction, speed and timing
 			direction = Random.Range (-180f, 180f);
 			direction += Random.Range(0, weightAngle-direction);
 
@@ -82,6 +86,13 @@ public class wander_ai : MonoBehaviour {
 			//transform.Rotate(transform.forward,direction);
 			//transform.Rotate(transform.up,direction);
 			rot = 0;
+			idle = false;
+
+			if(speed > 0.0f){
+				GetComponent<Animation>() ["Armature.001|WalkCycle"].speed = speed/speedMax * animSpeed;
+				GetComponent<Animation>().Play ("Armature.001|WalkCycle");
+			}
+
 		}
 
 		if (t > 0) {
@@ -96,6 +107,14 @@ public class wander_ai : MonoBehaviour {
 			//transform.Translate (transform.forward * (speed * Time.deltaTime));
 			transform.Translate (Vector3.forward * (speed * Time.deltaTime));
 			//direction = Vector3.Rotate(Vector3 (1, 0, 0),);
+		}
+		else if(t<=0 && !idle){
+			//GetComponent<Animation>() ["Armature.001|Idle"].speed = 1;
+			//GetComponent<Animation>().Play ("Armature.001|Idle");
+			//GetComponent<Animation>() [4].speed = 1;
+
+			GetComponent<Animation>().Play ();
+			idle = true;
 		}
 		
 		t -= Time.deltaTime;
