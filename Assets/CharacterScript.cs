@@ -51,7 +51,7 @@ public class CharacterScript : MonoBehaviour {
 	}
 	
 	private void Update(){
-		velocity = myTransform.position - previousPosition;
+		velocity = -transform.position + previousPosition;
 
 		// jump code - jump to wall or simple jump
 		if (jumping) return; // abort Update while jumping to a wall
@@ -93,18 +93,7 @@ public class CharacterScript : MonoBehaviour {
 				surfaceNormal = Vector3.up;
 			}
 
-			if(!isGrounded && !jumping){
-				ray = new Ray (myTransform.position-myTransform.up, -velocity); // cast ray backwards
-				
-				//If there is ground close enough below player, attach player to that ground
-				if (Physics.Raycast (ray, out hit)) { 
-					if (hit.transform.tag == "Wall"){
-						isGrounded = true;
-						//JumpToWall (myTransform.position - myTransform.up, myTransform.forward);
-						JumpToWall (hit.point, hit.normal);
-					}
-				}
-			}
+
 
 
 
@@ -117,6 +106,26 @@ public class CharacterScript : MonoBehaviour {
 			// move the character forth/back with Vertical axis:
 			myTransform.Translate (0, 0, Input.GetAxis ("Vertical") * moveSpeed * Time.deltaTime);
 			myTransform.Translate (Input.GetAxis ("Horizontal") * moveSpeed * Time.deltaTime, 0, 0);
+
+			velocity =new Vector3(Input.GetAxis ("Horizontal") * moveSpeed * Time.deltaTime,0,Input.GetAxis ("Vertical") * moveSpeed * Time.deltaTime);
+
+			//automatically aquire wall directly under a corner when you step over it
+			if(!isGrounded && !jumping){
+				Vector3 p = myTransform.position-myNormal*(distGround+0.1f);
+				float d = -Vector3.Dot(myNormal, -velocity);
+				ray = new Ray (p, (myTransform.rotation*-velocity)); // cast ray backwards
+				//ray = new Ray (p, -velocity + myNormal*d); // cast ray backwards
+				//ray = new Ray (p, Quaternion.Inverse(myTransform.rotation * -myForward)); // cast ray backwards
+				
+				//If there is ground close enough below player, attach player to that ground
+				if (Physics.Raycast (ray, out hit)) { 
+					if (hit.transform.tag == "Wall"){
+						isGrounded = true;
+						//JumpToWall (myTransform.position - myTransform.up, myTransform.forward);
+						JumpToWall (hit.point, hit.normal);
+					}
+				}
+			}
 		}
 		//If player is dead, fall over and die
 		else {
@@ -126,7 +135,7 @@ public class CharacterScript : MonoBehaviour {
 
 		}
 
-		previousPosition = myTransform.position;
+		previousPosition = transform.position;
 	}
 	
 	private void JumpToWall(Vector3 point, Vector3 normal){
