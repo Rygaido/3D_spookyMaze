@@ -51,7 +51,7 @@ public class CharacterScript : MonoBehaviour {
 	}
 	
 	private void Update(){
-		velocity = -transform.position + previousPosition;
+		//velocity = -transform.position + previousPosition;
 
 		// jump code - jump to wall or simple jump
 		if (jumping) return; // abort Update while jumping to a wall

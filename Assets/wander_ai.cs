@@ -31,13 +31,24 @@ public class wander_ai : MonoBehaviour {
 	Vector3 target;
 	public float targetPriority = 1.0f;
 
+	public Vector3 myNormal = new Vector3(0,1,0);
+
 	// Use this for initialization
 	void Start () {
 		origin = transform.position;
 	}
 
+	private void FixedUpdate(){
+		float gravity = 10;
+		// apply constant weight force according to enemy normal:
+		GetComponent<Rigidbody>().AddForce(-gravity*GetComponent<Rigidbody>().mass*myNormal);		
+	}
+
 	// Update is called once per frame
 	void Update () {
+		if (transform.up != myNormal) {
+			transform.rotation = Quaternion.FromToRotation(transform.up, myNormal);
+		}
 		if (t <= -delay) {
 			if(player != null){ //detect player, or defult to origin settings
 				if((transform.position-player.transform.position).magnitude < range){
