@@ -5,8 +5,8 @@ public class chase_ai : MonoBehaviour {
 
 	
 	float direction;
-	float speed;
-	public float speedMax = 4.0f;
+	public float speed = 4.0f;
+	//public float speedMax = 4.0f;
 	
 	float rot;
 	public float rotSpeed=0.5f;
@@ -63,20 +63,45 @@ public class chase_ai : MonoBehaviour {
 
 		if(isActivated){
 			target = player.transform.position;
+			//target.y = transform.position.y;
+
+			Vector3 dir = (target- transform.position);
+
+			//flatten dir based on mynormal -- enemy will chase player on a flat plane instead of flying
+			float h = Vector3.Dot(myNormal, dir); //height h vector would have protruded from plane
+			dir -= myNormal*h; //subtract that height in mynormal direction
+
+			dir.Normalize();
+			/*
+			float angle = Vector3.Angle( transform.forward, dir);
+			float sign = Mathf.Sign(Vector3.Dot(Vector3.up, Vector3.Cross(transform.forward, dir))); //get sign for rotation
+			angle *=sign;
+			transform.Rotate(transform.up,angle);
+			*/
+			//transform.forward = dir;
+			transform.rotation = Quaternion.LookRotation (dir);
+			//transform.rotation = Quaternion.FromToRotation(transform.forward, dir);
+
+			//transform.Translate (transform.forward * (speed * Time.deltaTime));
+			transform.Translate (dir * (speed * Time.deltaTime));
 		}
 		else{
 			target = origin;
 		}
 
 		//acquire direction
-		target.z = transform.position.z;
-		Vector3 dir = (target - transform.position);
-		float sign = Mathf.Sign(Vector3.Dot(Vector3.up, Vector3.Cross(Vector3.forward, dir))); //get sign for rotation
-		float angle = Vector3.Angle( transform.forward, dir);
-		angle *=sign;
+		//target.z = transform.position.z;
+		//Vector3 dir = (target-transform.position);
+		//float sign = Mathf.Sign(Vector3.Dot(Vector3.up, Vector3.Cross(transform.forward, dir))); //get sign for rotation
+		//float angle = Vector3.Angle( transform.forward, dir);
+		//angle *=sign;
 
-		transform.Rotate(transform.up,angle/2);
-		transform.Translate (transform.forward * (speed * Time.deltaTime));
+		//Vector3 dir = (target-transform.position);
+		//transform.rotation = Quaternion.LookRotation (dir);
+		//transform.LookAt (target);
+		//transform.Rotate(transform.up,angle);
+		//transform.Rotate(Vector3.up,dir);
+		//transform.Translate (transform.forward * (speed * Time.deltaTime));
 
 
 			/*
