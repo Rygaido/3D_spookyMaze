@@ -31,7 +31,7 @@ public class chase_ai : MonoBehaviour {
 	public float range = 10.0f;
 	//if target is specified, ai is more likely to wander in its general direction
 	Vector3 target;
-	public float targetPriority = 1.0f;
+	//public float targetPriority = 1.0f;
 	
 	public Vector3 myNormal = new Vector3(0,1,0);
 	
@@ -71,9 +71,13 @@ public class chase_ai : MonoBehaviour {
 		//acquire direction
 		target.z = transform.position.z;
 		Vector3 dir = (target - transform.position);
-		float sign = Mathf.Sign(Vector3.Dot(Vector3.up, Vector3.Cross(Vector3.forward, a))); //get sign for rotation
-		angle = Vector3.Angle( transform.forward, a);
+		float sign = Mathf.Sign(Vector3.Dot(Vector3.up, Vector3.Cross(Vector3.forward, dir))); //get sign for rotation
+		float angle = Vector3.Angle( transform.forward, dir);
 		angle *=sign;
+
+		transform.Rotate(transform.up,angle/2);
+		transform.Translate (transform.forward * (speed * Time.deltaTime));
+
 
 			/*
 			//modify probability to face player
