@@ -2,9 +2,9 @@ Initialize engine version: 5.1.2f1 (afd2369b692a)
 GfxDevice: creating device client; threaded=1
 Direct3D:
     Version:  Direct3D 11.0 [level 11.0]
-    Renderer: NVIDIA GeForce GTX 970 (ID=0x13c2)
+    Renderer: NVIDIA GeForce GTX 680 (ID=0x1180)
     Vendor:   NVIDIA
-    VRAM:     3072 MB
+    VRAM:     1989 MB
 Begin MonoManager ReloadAssembly
 Platform assembly: \\banner.main.ad.rit.edu\students\sts7613\IGMProfile\Desktop\GitHub\3D_spookyMaze\3dSpookyMaze_Data\Managed\UnityEngine.dll (this message is harmless)
 Loading \\banner.main.ad.rit.edu\students\sts7613\IGMProfile\Desktop\GitHub\3D_spookyMaze\3dSpookyMaze_Data\Managed\UnityEngine.dll into Unity Child Domain
@@ -16,7 +16,7 @@ Platform assembly: \\banner.main.ad.rit.edu\students\sts7613\IGMProfile\Desktop\
 Loading \\banner.main.ad.rit.edu\students\sts7613\IGMProfile\Desktop\GitHub\3D_spookyMaze\3dSpookyMaze_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
 Platform assembly: \\banner.main.ad.rit.edu\students\sts7613\IGMProfile\Desktop\GitHub\3D_spookyMaze\3dSpookyMaze_Data\Managed\UnityEngine.Analytics.dll (this message is harmless)
 Loading \\banner.main.ad.rit.edu\students\sts7613\IGMProfile\Desktop\GitHub\3D_spookyMaze\3dSpookyMaze_Data\Managed\UnityEngine.Analytics.dll into Unity Child Domain
-- Completed reload, in 12.185 seconds
+- Completed reload, in  3.845 seconds
 desktop: 1920x1080 60Hz; virtual: 3840x1080 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
