@@ -169,6 +169,7 @@ public class CharacterScript : MonoBehaviour {
 	void OnTriggerEnter(Collider other){
 		if (other.transform.tag == "Enemy") {
 			isAlive = false;
+			other.GetComponent<DeathAnimation>().Play();
 		}
 	}
 	

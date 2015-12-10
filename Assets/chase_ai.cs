@@ -8,8 +8,8 @@ public class chase_ai : MonoBehaviour {
 	public float speed = 4.0f;
 	//public float speedMax = 4.0f;
 	
-	float rot;
-	public float rotSpeed=0.5f;
+	//float rot;
+	//public float rotSpeed=0.5f;
 
 	/*
 	float t;
@@ -29,6 +29,7 @@ public class chase_ai : MonoBehaviour {
 	bool idle =false;
 	
 	public float range = 10.0f;
+	public float minRange = 1.0f; //if too close, AI must be under player and unable to reach, and so must stop moving otherwise it looks spaztic
 	//if target is specified, ai is more likely to wander in its general direction
 	Vector3 target;
 	//public float targetPriority = 1.0f;
@@ -49,11 +50,12 @@ public class chase_ai : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (transform.up != myNormal) {
-			transform.rotation = Quaternion.FromToRotation(transform.up, myNormal);
+			//transform.rotation = Quaternion.FromToRotation(transform.up, myNormal);
 		}
 		//if (t <= -delay) {
 		if(player != null){ //detect player, or defult to origin settings
-			if((transform.position-player.transform.position).magnitude < range){
+			float dist = (transform.position-player.transform.position).magnitude;
+			if(dist < range){
 				isActivated = true;
 			}
 			else{
@@ -71,19 +73,24 @@ public class chase_ai : MonoBehaviour {
 			float h = Vector3.Dot(myNormal, dir); //height h vector would have protruded from plane
 			dir -= myNormal*h; //subtract that height in mynormal direction
 
-			dir.Normalize();
-			/*
-			float angle = Vector3.Angle( transform.forward, dir);
-			float sign = Mathf.Sign(Vector3.Dot(Vector3.up, Vector3.Cross(transform.forward, dir))); //get sign for rotation
-			angle *=sign;
-			transform.Rotate(transform.up,angle);
-			*/
-			//transform.forward = dir;
-			transform.rotation = Quaternion.LookRotation (dir);
-			//transform.rotation = Quaternion.FromToRotation(transform.forward, dir);
+			if(dir.magnitude > minRange){
+				dir.Normalize();
+				///*
+				float angle = Vector3.Angle( transform.forward, dir);
+				//float sign = Mathf.Sign(Vector3.Dot(Vector3.up, Vector3.Cross(transform.forward, dir))); //get sign for rotation
+				float sign = Mathf.Sign(Vector3.Dot(myNormal, Vector3.Cross(transform.forward, dir))); //get sign for rotation
+				angle *= sign;
+				transform.Rotate(myNormal,angle, Space.World);
+				//transform.forward = dir;
+				//*/
+				//transform.forward = dir;
+				//transform.Rotate(transform.up,angle);
+				//transform.rotation = Quaternion.LookRotation (dir);
+				//transform.rotation = Quaternion.FromToRotation(transform.forward, dir);
 
-			//transform.Translate (transform.forward * (speed * Time.deltaTime));
-			transform.Translate (dir * (speed * Time.deltaTime));
+				//transform.Translate (transform.forward * (speed * Time.deltaTime));
+				transform.Translate (dir * (speed * Time.deltaTime), Space.World);
+			}
 		}
 		else{
 			target = origin;
