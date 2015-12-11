@@ -36,6 +36,12 @@ public class DeathAnimation : MonoBehaviour {
 			GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), images[(int)frame]);
 		}
 	}
+
+	void OnCollisionEnter(Collision col) {
+		if (col.collider.tag == "Enemy") {
+			Play();
+		}
+	}
 	
 	public void Play() {
 		playing = true;
