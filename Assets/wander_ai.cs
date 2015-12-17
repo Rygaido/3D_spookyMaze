@@ -120,7 +120,7 @@ public class wander_ai : MonoBehaviour {
 				GetComponent<Animation>() ["Armature.001|WalkCycle"].speed = speed/speedMax * animSpeed + 1;
 				GetComponent<Animation>().Play ("Armature.001|WalkCycle");
 
-				sd = soundDelay*speed/speedMax;
+				sd = 0;
 			}
 		}
 		else if (t > 0) { //walking
