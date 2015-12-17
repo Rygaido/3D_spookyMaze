@@ -72,7 +72,7 @@ public class chase_ai : MonoBehaviour {
 			if(dist < range){
 				isActivated = true;
 			}
-			else{
+			else if (dist > range*2){
 				isActivated = false;
 				//apply animation
 				if(!animate.IsPlaying("Armature.002|IdleFinal")){
