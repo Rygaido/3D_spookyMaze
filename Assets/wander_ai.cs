@@ -10,7 +10,7 @@ public class wander_ai : MonoBehaviour {
 	float rot;
 	public float rotSpeed=0.5f;
 	
-	float t;
+	public float t;
 	float timer;
 	public float timeMax = 2.0f;
 	float delay;
@@ -44,6 +44,8 @@ public class wander_ai : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		origin = transform.position;
+		delay = 1.0f;
+		sound = GetComponent<AudioSource> ();
 	}
 
 	private void FixedUpdate(){
@@ -117,13 +119,11 @@ public class wander_ai : MonoBehaviour {
 			if(speed > 0.0f){
 				GetComponent<Animation>() ["Armature.001|WalkCycle"].speed = speed/speedMax * animSpeed + 1;
 				GetComponent<Animation>().Play ("Armature.001|WalkCycle");
+
+				sd = soundDelay*speed/speedMax;
 			}
-
-			soundDelay = soundDelay*speed/speedMax;
-
 		}
-
-		if (t > 0) { //walking
+		else if (t > 0) { //walking
 
 			if(rot < Mathf.Abs(direction)){
 				float d=(direction/rotSpeed) * Time.deltaTime;
@@ -137,16 +137,18 @@ public class wander_ai : MonoBehaviour {
 			//direction = Vector3.Rotate(Vector3 (1, 0, 0),);
 
 			//sound effect
-			sd -= Time.deltaTime;
-			if(sd <= 0){
-				if(volume == volumeMax){
-					volume -= volumeFlux;
+			if(speed > 0.0f){
+				sd -= Time.deltaTime;
+				if(sd <= 0){
+					if(volume == volumeMax){
+						volume -= volumeFlux;
+					}
+					else{
+						volume += volumeFlux;
+					}
+					sound.PlayOneShot(footStep,volume);
+					sd = soundDelay* (1-speed/speedMax);
 				}
-				else{
-					volume += volumeFlux;
-				}
-				sound.PlayOneShot(footStep,volume);
-				sd = soundDelay;
 			}
 		}
 		else if(t<=0 && !idle){
@@ -159,5 +161,6 @@ public class wander_ai : MonoBehaviour {
 		}
 		
 		t -= Time.deltaTime;
+		//t -= 1;
 	}
 }
