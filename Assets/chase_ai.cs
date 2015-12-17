@@ -46,10 +46,13 @@ public class chase_ai : MonoBehaviour {
 
 	public AudioClip footStep;
 
+	Animation animate;
+
 	// Use this for initialization
 	void Start () {
 		origin = transform.position;
 		sound = GetComponent<AudioSource> ();
+		animate = GetComponent<Animation> ();
 	}
 	
 	private void FixedUpdate(){
@@ -71,49 +74,65 @@ public class chase_ai : MonoBehaviour {
 			}
 			else{
 				isActivated = false;
+				//apply animation
+				if(!animate.IsPlaying("Armature.002|IdleFinal")){
+					animate.Play ("Armature.002|IdleFinal");
+				}
 			}
 		}
 
-		if(isActivated){
+		if (isActivated) {
 			target = player.transform.position;
 			//target.y = transform.position.y;
 
-			Vector3 dir = (target- transform.position);
+			Vector3 dir = (target - transform.position);
 
 			//flatten dir based on mynormal -- enemy will chase player on a flat plane instead of flying
-			float h = Vector3.Dot(myNormal, dir); //height h vector would have protruded from plane
-			dir -= myNormal*h; //subtract that height in mynormal direction
+			float h = Vector3.Dot (myNormal, dir); //height h vector would have protruded from plane
+			if (Mathf.Abs(h) < 3) { //if h is too high, give up on chase
+				dir -= myNormal * h; //subtract that height in mynormal direction
 
-			if(dir.magnitude > minRange){
-				dir.Normalize();
-				///*
-				float angle = Vector3.Angle( transform.forward, dir);
-				//float sign = Mathf.Sign(Vector3.Dot(Vector3.up, Vector3.Cross(transform.forward, dir))); //get sign for rotation
-				float sign = Mathf.Sign(Vector3.Dot(myNormal, Vector3.Cross(transform.forward, dir))); //get sign for rotation
-				angle *= sign;
-				transform.Rotate(myNormal,angle, Space.World);
-				//transform.forward = dir;
-				//*/
-				//transform.forward = dir;
-				//transform.Rotate(transform.up,angle);
-				//transform.rotation = Quaternion.LookRotation (dir);
-				//transform.rotation = Quaternion.FromToRotation(transform.forward, dir);
+				if (dir.magnitude > minRange) {
+					dir.Normalize ();
+					///*
+					float angle = Vector3.Angle (transform.forward, dir);
+					//float sign = Mathf.Sign(Vector3.Dot(Vector3.up, Vector3.Cross(transform.forward, dir))); //get sign for rotation
+					float sign = Mathf.Sign (Vector3.Dot (myNormal, Vector3.Cross (transform.forward, dir))); //get sign for rotation
+					angle *= sign;
+					transform.Rotate (myNormal, angle, Space.World);
+					//transform.forward = dir;
+					//*/
+					//transform.forward = dir;
+					//transform.Rotate(transform.up,angle);
+					//transform.rotation = Quaternion.LookRotation (dir);
+					//transform.rotation = Quaternion.FromToRotation(transform.forward, dir);
 
-				//transform.Translate (transform.forward * (speed * Time.deltaTime));
-				transform.Translate (dir * (speed * Time.deltaTime), Space.World);
+					//transform.Translate (transform.forward * (speed * Time.deltaTime));
+					transform.Translate (dir * (speed * Time.deltaTime), Space.World);
 
-				//sound effect
-				//fluxuate volume slightly to simulate alternating steps
-				sd -= Time.deltaTime;
-				if(sd <= 0){
-					if(volume == volumeMax){
-						volume -= volumeFlux;
+					//apply animation
+					if(!animate.IsPlaying("Armature.002|WalkCycleFinal")){
+						animate.Play ("Armature.002|WalkCycleFinal");
 					}
-					else{
-						volume += volumeFlux;
+
+					//sound effect
+					//fluxuate volume slightly to simulate alternating steps
+					sd -= Time.deltaTime;
+					if (sd <= 0) {
+						if (volume == volumeMax) {
+							volume -= volumeFlux;
+						} else {
+							volume += volumeFlux;
+						}
+						sound.PlayOneShot (footStep, volume);
+						sd = soundDelay;
 					}
-					sound.PlayOneShot(footStep,volume);
-					sd = soundDelay;
+				}
+			}
+			else{
+				//apply animation
+				if(!animate.IsPlaying("Armature.002|IdleFinal")){
+					animate.Play ("Armature.002|IdleFinal");
 				}
 			}
 		}

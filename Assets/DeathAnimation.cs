@@ -23,7 +23,7 @@ public class DeathAnimation : MonoBehaviour {
 		if (playing) {
 			frame += fps * Time.deltaTime;
 			
-			if (frame >= images[movie].Length) {
+			if (frame >= images[movie].Length -1) {
 				Application.LoadLevel("Scene1");
 			}
 		}
