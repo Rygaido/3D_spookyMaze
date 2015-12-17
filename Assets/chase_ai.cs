@@ -35,10 +35,21 @@ public class chase_ai : MonoBehaviour {
 	//public float targetPriority = 1.0f;
 	
 	public Vector3 myNormal = new Vector3(0,1,0);
-	
+
+	AudioSource sound;
+	public float volumeMax = 1.0f;
+	float volumeFlux = 0.1f;
+	float volume = 1.0f;
+
+	public float soundDelay = 1.0f;
+	float sd;
+
+	public AudioClip footStep;
+
 	// Use this for initialization
 	void Start () {
 		origin = transform.position;
+		sound = GetComponent<AudioSource> ();
 	}
 	
 	private void FixedUpdate(){
@@ -90,6 +101,20 @@ public class chase_ai : MonoBehaviour {
 
 				//transform.Translate (transform.forward * (speed * Time.deltaTime));
 				transform.Translate (dir * (speed * Time.deltaTime), Space.World);
+
+				//sound effect
+				//fluxuate volume slightly to simulate alternating steps
+				sd -= Time.deltaTime;
+				if(sd <= 0){
+					if(volume == volumeMax){
+						volume -= volumeFlux;
+					}
+					else{
+						volume += volumeFlux;
+					}
+					sound.PlayOneShot(footStep,volume);
+					sd = soundDelay;
+				}
 			}
 		}
 		else{

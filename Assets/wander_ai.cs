@@ -31,6 +31,14 @@ public class wander_ai : MonoBehaviour {
 	Vector3 target;
 	public float targetPriority = 1.0f;
 
+	AudioSource sound;
+	public float volumeMax = 1.0f;
+	float volumeFlux = 0.1f;
+	float volume = 1.0f;
+	public float soundDelay = 0.4f;
+	float sd;
+	public AudioClip footStep;
+
 	public Vector3 myNormal = new Vector3(0,1,0);
 
 	// Use this for initialization
@@ -105,14 +113,17 @@ public class wander_ai : MonoBehaviour {
 			rot = 0;
 			idle = false;
 
+			//animation effect
 			if(speed > 0.0f){
 				GetComponent<Animation>() ["Armature.001|WalkCycle"].speed = speed/speedMax * animSpeed + 1;
 				GetComponent<Animation>().Play ("Armature.001|WalkCycle");
 			}
 
+			soundDelay = soundDelay*speed/speedMax;
+
 		}
 
-		if (t > 0) {
+		if (t > 0) { //walking
 
 			if(rot < Mathf.Abs(direction)){
 				float d=(direction/rotSpeed) * Time.deltaTime;
@@ -124,6 +135,19 @@ public class wander_ai : MonoBehaviour {
 			//transform.Translate (transform.forward * (speed * Time.deltaTime));
 			transform.Translate (Vector3.forward * (speed * Time.deltaTime));
 			//direction = Vector3.Rotate(Vector3 (1, 0, 0),);
+
+			//sound effect
+			sd -= Time.deltaTime;
+			if(sd <= 0){
+				if(volume == volumeMax){
+					volume -= volumeFlux;
+				}
+				else{
+					volume += volumeFlux;
+				}
+				sound.PlayOneShot(footStep,volume);
+				sd = soundDelay;
+			}
 		}
 		else if(t<=0 && !idle){
 			//GetComponent<Animation>() ["Armature.001|Idle"].speed = 1;
